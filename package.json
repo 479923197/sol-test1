@@ -1,0 +1,22 @@
+{
+  "name": "sol-test1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/479923197/sol-test1.git"
+  },
+  "author": "479923197",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/479923197/sol-test1/issues"
+  },
+  "homepage": "https://github.com/479923197/sol-test1#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^4.3.1"
+  }
+}
