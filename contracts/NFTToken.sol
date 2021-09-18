@@ -28,7 +28,7 @@ contract NFTToken is ERC721,Ownable {
     function setPlayerPool(uint32[] memory) public onlyOwner {}
 
     /** 抽卡 */
-    function createCard() public returns (uint256, uint32) {
+    function createCard() public payable returns (uint256, uint32) {
         uint256 _tokenId = ++countor;
 
         //随机卡片
