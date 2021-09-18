@@ -20,7 +20,7 @@ contract NFTCoin is ERC20,Ownable {
     }
 
     //精度
-    function decimals() public pure returns (uint8) {
+    function decimals() public override pure returns (uint8) {
         return 0;
     }
 }
