@@ -1,20 +1,19 @@
 {
-  "name": "fm",
+  "name": "app",
   "version": "1.0.0",
+  "description": "",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
-  },
-  "dependencies": {
-    "core-js": "^3.15.1",
-    "nuxt": "^2.15.8",
-    "web3": "^1.5.2"
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^4.2.0",
-    "postcss": "^8.3.5"
+    "copy-webpack-plugin": "^5.0.5",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "web3": "^1.2.4"
   }
 }

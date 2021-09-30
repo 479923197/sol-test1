@@ -1,15 +1,17 @@
-// SPDX-License-Identifier: SimPL-2.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 /**
-    挖矿获得的金币
+    金币-用于游戏内产出/消耗的货币
  */
-contract Gold is ERC20,Ownable {
+contract Gold is ERC20Upgradeable,OwnableUpgradeable {
 
-    constructor() ERC20("FM gold","FMG") {
+    function initialize() public initializer {
+        __ERC20_init("FM gold","FMG");
+
         //初始个数
         super._mint(msg.sender, 10000000);
     }
