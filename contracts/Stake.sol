@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./NftPlayer.sol";
 import "./Gold.sol";
 
 /** NFT质押 */
-contract Stake is Ownable {
+contract Stake is OwnableUpgradeable {
 
     Gold goldInstance;
     NftPlayer playerInstance;
