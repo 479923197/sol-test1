@@ -1,0 +1,35 @@
+<!DOCTYPE html lang='zh-cn'>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>MetaCoin | Truffle Webpack Demo w/ Frontend</title>
+  </head>
+  <style>
+    input {
+      display: block;
+      margin-bottom: 12px;
+    }
+  </style>
+  <body>
+    <h1>account</h1>
+    <p><strong class="account">loading...</strong></p>
+
+
+    <button onclick="App.approve()">授信</button>
+    <p><strong class="approve"></strong></p><p></p>
+
+    <button onclick="App.allowance()">获取授信额度</button>
+    <p><strong class="allowance"></strong></p><p></p>
+
+    <button onclick="App.createCardCall()">开卡</button>
+    <p><strong class="createCard"></strong></p>
+
+    <button onclick="App.getCards()">查看卡包</button>
+    <p class="getCards"><strong></strong></p>
+
+    <button onclick="App.getPool()">查看球员池</button>
+    <p class="getPool"><strong></strong></p>
+
+    <script src="index.js"></script>
+  </body>
+</html>
