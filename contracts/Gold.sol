@@ -11,9 +11,10 @@ contract Gold is ERC20Upgradeable,OwnableUpgradeable {
 
     function initialize() public initializer {
         __ERC20_init("FM gold","FMG");
+        __Ownable_init();
 
         //初始个数
-        super._mint(msg.sender, 10000000);
+        super._mint(msg.sender, 10000000 * 1e8);
     }
 
     /** 管理员生成金币 */
@@ -22,7 +23,7 @@ contract Gold is ERC20Upgradeable,OwnableUpgradeable {
     }
 
     //精度
-    function decimals() public pure override returns (uint8) {
-        return 0;
+    function decimals() public override pure returns (uint8) {
+        return 8;
     }
 }

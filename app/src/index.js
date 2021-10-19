@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import Diamond from "../../build/contracts/Diamond.json";
-import NftPlayer from "../../build/contracts/NftPlayerV2.json";
+import NftPlayer from "../../build/contracts/NftHero.json";
 
 const App = {
   web3: null,
@@ -45,7 +45,7 @@ const App = {
     this.nft.once('createCardEvent', {}, function(error, event){ 
       console.log("触发开卡事件", event); 
 
-      let html = "<p>开卡结果 token:"+ App.web3.utils.toHex(event.returnValues.token) + "; player_id:"+ event.returnValues.player_id+ "</p>";
+      let html = "<p>开卡结果 token:"+ App.web3.utils.toHex(event.returnValues.token) +"</p>";
       document.getElementsByClassName("createCard")[0].innerHTML = html;
     });
 
@@ -66,8 +66,7 @@ const App = {
         let html = "";
         for (let i=0; i< result[0].length; i++) {
           let token = this.web3.utils.toHex(result[0][i]);
-          let player_id = result[1][i];
-          html += "<p>token:"+ token + "; player_id:"+ player_id+ "</p>";
+          html += `<p>token:${token}; id:${result[1][i]}; lv:${result[5][i]}; attr:${result[2][i]},${result[3][i]},${result[4][i]}</p>`;
         }
         document.getElementsByClassName("getCards")[0].innerHTML = html;
       }
@@ -79,7 +78,7 @@ const App = {
     //授权
     let tokenAddress = NftPlayer.networks[this.networkId].address;
 
-    await this.diamond.methods.approve(tokenAddress, 1).send({
+    await this.diamond.methods.approve(tokenAddress, 1e8).send({
       from: this.account, 
       gasLimit: this.web3.utils.toHex(90000),
       gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
@@ -96,15 +95,6 @@ const App = {
 
     let allowce = await this.diamond.methods.allowance(this.account, tokenAddress).call();
     document.getElementsByClassName("allowance")[0].innerHTML = allowce;
-  },
-
-  //查看球员池
-  getPool: async function() {
-    //授权
-    let tokenAddress = NftPlayer.networks[this.networkId].address;
-
-    let pool = await this.nft.methods.getPlayerPool().call();
-    document.getElementsByClassName("getPool")[0].innerHTML = JSON.stringify(pool);
   },
 };
 

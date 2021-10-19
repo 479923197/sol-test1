@@ -2,27 +2,29 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "./NftPlayer.sol";
+import "./NftHero.sol";
 import "./Gold.sol";
 
 /** NFT质押 */
 contract Stake is OwnableUpgradeable {
 
     Gold goldInstance;
-    NftPlayer playerInstance;
+    NftHero nftHeroInst;
 
     //nft质押时间
     mapping(uint256 => uint256) tokenStaketime;
     //nft质押人
     mapping(address => uint256) userToken;
 
-    constructor(Gold _gold, NftPlayer _nftPlayer) {
+    function initialize(Gold _gold, NftHero _NftHero) public initializer {
         goldInstance = _gold;
-        playerInstance = _nftPlayer;
+        nftHeroInst = _NftHero;
     }
 
     /** 质押 */
-    function stake(uint256 _token) public {
+    function stakeHero(uint256 _token) public {
+        require(nftHeroInst.ownerOf(_token) == _msgSender(), "That is not your token");
+        nftHeroInst.safeTransferFrom(_msgSender(), address(this), _token);
         
     }
 

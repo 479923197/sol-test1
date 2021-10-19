@@ -7,6 +7,10 @@ contract Base is OwnableUpgradeable {
 
     address internal _implementation;
 
+    function initialize() public initializer {
+        __Ownable_init();
+    }
+
     /** 查询当前合约 */
     function implementation() public view returns (address) {
         return _implementation;
