@@ -4,14 +4,16 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./Diamond.sol";
+import "./lib/HeroPool.sol";
 
 /** 球员卡/道具 */
 contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
 
     Diamond diamondInstance;
+    HeroPool heroPoolInstance;
 
     //随机数种子
-    uint256 randSeed;
+    uint256 totalRandTimes;
     //生成tokenID计数器
     uint256 private countor;
     //卡片id,类型
@@ -33,11 +35,12 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
     mapping(address => uint) private userRandtimes;
 
 
-    function initialize(Diamond _diamondInstance) public initializer {
+    function initialize(Diamond _diamondInstance, HeroPool _heroPoolInstance) public initializer {
         __ERC721_init("FM Token Card", "FMC");
         __Ownable_init();
         
         diamondInstance = _diamondInstance;
+        heroPoolInstance = _heroPoolInstance;
 
         herosType[1] = 1;
         herosType[2] = 1;
@@ -53,6 +56,10 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
         herosType[12] = 3;
     }
 
+    function setHeroPool( HeroPool _heroPoolInstance) public onlyOwner {
+        heroPoolInstance = _heroPoolInstance;
+    }
+
     /** 抽卡 */
     function createCard() public payable {
         uint256 cost = 1 * 1e8;
@@ -66,7 +73,7 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
 
         //随机卡片
         uint id; uint li; uint min; uint zhi;
-        (id,li,min,zhi) = _randHero(++ userRandtimes[_msgSender()]);
+        (id,li,min,zhi) = heroPoolInstance.rand(++totalRandTimes,  ++userRandtimes[_msgSender()]);
         cardDB[_tokenId] = HeroInfo(id,li,min,zhi,1);
 
         //mint会触发_beforeTokenTransfer
@@ -128,19 +135,19 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
         
         emit transferCardEvent(from, to, tokenId);
     }
-
+/*
     //随机卡片
     function _randHero(uint times) private returns(uint id, uint li, uint min, uint zhi) {
         uint overTimes = times - 1;
 
-randSeed++;
+totalRandTimes++;
         id = rand(1, 12); //hero id
         uint attr_main; //主属性
         uint attr_side_min;  //次属性的最小值
         uint attr_side1;
         uint attr_side2;
 
-randSeed++;
+totalRandTimes++;
         if (overTimes == 0) {
             attr_main = rand(80, 100);
         } else if (overTimes % 5 == 0) {
@@ -149,11 +156,11 @@ randSeed++;
             attr_main = rand(65, 94);
         }
 
-randSeed++;
+totalRandTimes++;
         attr_side_min = rand(10, 64);
-randSeed++;
+totalRandTimes++;
         attr_side1 = rand(attr_side_min, attr_main);
-randSeed++;
+totalRandTimes++;
         attr_side2 = rand(attr_side_min, attr_main);
 
         if (herosType[id] == 1) {
@@ -171,10 +178,10 @@ randSeed++;
         }
         return (id, li, zhi, min);
     }
-
+*/
     function rand(uint256 _min,uint256 _max) private view returns(uint256) {
         require(_max > _min);
-        uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp+ randSeed)));
+        uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp+ totalRandTimes)));
         return uint256(random % (_max-_min)) + _min;
     }
 

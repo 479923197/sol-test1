@@ -14,7 +14,7 @@ const App = {
 
     try {
       // get contract instance
-      this.networkId = await web3.eth.net.getId();
+      this.networkId = 1634802353462;//await web3.eth.net.getId();
       //const deployedNetwork = NftPlayer.networks[networkId];
       this.nft = new web3.eth.Contract(
         NftPlayer.abi,
