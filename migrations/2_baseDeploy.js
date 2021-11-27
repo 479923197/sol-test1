@@ -4,8 +4,6 @@ const { deployProxy } = require('@openzeppelin/truffle-upgrades');
 const RandPool = artifacts.require("HeroPool");
 const Gold = artifacts.require("Gold");
 const Diamond = artifacts.require("Diamond");
-const NftHero = artifacts.require("NftHero");
-const NftHeroProxy = artifacts.require("NftHeroProxy");
 
 module.exports = async function (deployer) {
   //原始部署，也可以传递参数给构造函数 deployer.deploy(A, arg1, arg2, ...);

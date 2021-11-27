@@ -27,8 +27,19 @@
     <button onclick="App.getCards()">查看卡包</button>
     <p class="getCards"><strong></strong></p>
 
-    <button onclick="App.getPool()">查看球员池</button>
-    <p class="getPool"><strong></strong></p>
+    <input id="stake" class="stake" type="text" />
+    <button onclick="App.getApproved()">查询授权</button>
+    <p class="getApproved"><strong></strong></p>
+
+    <button onclick="App.stakeApprove()">授权可质押</button>
+    <button onclick="App.stakeNft()">质押</button>
+    <p class="stake"><strong></strong></p>
+
+    <button onclick="App.viewStaked()">获取在质押卡片</button>
+    <p class="viewStaked"><strong></strong></p>
+
+    <button onclick="App.sign()">测试签名</button>
+    <p class="signResult"><strong></strong></p>
 
     <script src="index.js"></script>
   </body>

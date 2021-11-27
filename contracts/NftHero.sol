@@ -17,7 +17,7 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
     //生成tokenID计数器
     uint256 private countor;
     //卡片id,类型
-    mapping(uint => uint) herosType;
+    mapping(uint256 => uint256) herosType;
     //卡片信息
     struct HeroInfo {
         uint id;
@@ -33,7 +33,6 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
     mapping(address => uint256[]) private tokenDB;
     //用户随机英雄的次数、
     mapping(address => uint) private userRandtimes;
-
 
     function initialize(Diamond _diamondInstance, HeroPool _heroPoolInstance) public initializer {
         __ERC721_init("FM Token Card", "FMC");
@@ -106,79 +105,42 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
 
     //删除token
     function burn(uint256 tokenId) public onlyOwner {
-        address tokenOwner = ownerOf(tokenId);
-
-        //删除指定tokenId
-        uint256[] memory newUserTokens = new uint256[](tokenDB[tokenOwner].length - 1);
-        uint256 realLen;
-
-        for (uint i=0; i<tokenDB[tokenOwner].length; i++) {
-            if (tokenDB[tokenOwner][i] != tokenId) {
-                newUserTokens[realLen] = tokenDB[tokenOwner][i];
-            }
-            realLen ++;
-        }
-        require(realLen == tokenDB[tokenOwner].length - 1);
-        tokenDB[tokenOwner] = newUserTokens;
-
-        //燃烧
         _burn(tokenId);
     }
 
+    /* nft变动（挖出、销毁、转账）都会调用 */
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override {
+        if (from != address(0)) {
+            uint256[] memory newUserTokens = new uint256[](tokenDB[from].length - 1);
+            if (tokenDB[from].length > 1) {
+                uint256 realLen;
+                for (uint i=0; i<tokenDB[from].length; i++) {
+                    if (tokenDB[from][i] != tokenId) {
+                        newUserTokens[realLen] = tokenDB[from][i];
+                        realLen ++;
+                    }
+                }
+                require(realLen == tokenDB[from].length - 1);
+            }
+            tokenDB[from] = newUserTokens;
+        }
+
         if (to != address(0)) {
-            //录入我的token
-            tokenDB[_msgSender()].push(tokenId);
+            tokenDB[to].push(tokenId);
         } else {
             delete cardDB[tokenId];
         }
         
         emit transferCardEvent(from, to, tokenId);
     }
-/*
-    //随机卡片
-    function _randHero(uint times) private returns(uint id, uint li, uint min, uint zhi) {
-        uint overTimes = times - 1;
 
-totalRandTimes++;
-        id = rand(1, 12); //hero id
-        uint attr_main; //主属性
-        uint attr_side_min;  //次属性的最小值
-        uint attr_side1;
-        uint attr_side2;
-
-totalRandTimes++;
-        if (overTimes == 0) {
-            attr_main = rand(80, 100);
-        } else if (overTimes % 5 == 0) {
-            attr_main = rand(70, 99);
-        } else {
-            attr_main = rand(65, 94);
-        }
-
-totalRandTimes++;
-        attr_side_min = rand(10, 64);
-totalRandTimes++;
-        attr_side1 = rand(attr_side_min, attr_main);
-totalRandTimes++;
-        attr_side2 = rand(attr_side_min, attr_main);
-
-        if (herosType[id] == 1) {
-            li = attr_main;
-            min = attr_side1;
-            zhi = attr_side2;
-        } else if (herosType[id] == 2) {
-            li = attr_side1;
-            min = attr_side2;
-            zhi = attr_main;
-        } else {
-            li = attr_side1;
-            min = attr_side2;
-            zhi = attr_main;
-        }
-        return (id, li, zhi, min);
+    /** 获取属性 */
+    function getAttr(uint256 tokenId) public view returns (uint256 _id, uint256 _type, uint256 li, uint256 min, uint256 zhi, uint lv)  {
+        require(cardDB[tokenId].id > 0, "didnot found this token attr");
+        HeroInfo memory info = cardDB[tokenId];
+        return (info.id, herosType[_id], info.li, info.min, info.zhi, info.lv);
     }
-*/
+
     function rand(uint256 _min,uint256 _max) private view returns(uint256) {
         require(_max > _min);
         uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp+ totalRandTimes)));
