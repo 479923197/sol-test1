@@ -14,32 +14,50 @@
     <h1>account</h1>
     <p><strong class="account">loading...</strong></p>
 
+    <p>
+      <br>------------------------------------<br>
+      <strong class="account">查询授信额度</strong>
+      <input id="erc20ToAdress" class="erc20ToAdress" type="text" placeholder="授信合约地址" />
+      <button onclick="App.getAllowance()">查询额度</button>
+      <strong class="allowance"></strong>
+      <br>------------------------------------<br>
+    </p>
 
     <button onclick="App.approve()">授信</button>
     <p><strong class="approve"></strong></p><p></p>
-
-    <button onclick="App.allowance()">获取授信额度</button>
-    <p><strong class="allowance"></strong></p><p></p>
 
     <button onclick="App.createCardCall()">开卡</button>
     <p><strong class="createCard"></strong></p>
 
     <button onclick="App.getCards()">查看卡包</button>
-    <p class="getCards"><strong></strong></p>
+    <p class="getCards"></p>
+    <p><br>------------------------------------<br></p>
 
     <input id="stake" class="stake" type="text" />
     <button onclick="App.getApproved()">查询授权</button>
-    <p class="getApproved"><strong></strong></p>
+    <p class="getApproved"></p>
 
     <button onclick="App.stakeApprove()">授权可质押</button>
     <button onclick="App.stakeNft()">质押</button>
-    <p class="stake"><strong></strong></p>
+    <p class="stake"></p>
 
     <button onclick="App.viewStaked()">获取在质押卡片</button>
-    <p class="viewStaked"><strong></strong></p>
+    <p class="viewStaked"></p>
+    <p><br>------------------------------------<br></p>
 
+    <!--
     <button onclick="App.sign()">测试签名</button>
-    <p class="signResult"><strong></strong></p>
+    <p class="signResult"></p>
+    -->
+
+    <input id="put_market" class="put_market" placeholder="英雄token" type="text" />
+    <input id="put_price" class="put_price" placeholder="输入金额" type="text" />
+    <button onclick="App.approveMarketFee()">授权手续费</button>
+    <button onclick="App.approveMarketHero()">授权卡牌</button>
+    <button onclick="App.createProduct()">出售</button>
+    <button onclick="App.withdrawProduct()">取回</button>
+    <button onclick="App.reviewMyProducts()">查询我在售的物品</button>
+    <p class="reviewMyProducts"></p>
 
     <script src="index.js"></script>
   </body>

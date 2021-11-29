@@ -44,8 +44,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -65,8 +64,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -103,8 +101,7 @@
     },
     {
       "stateMutability": "payable",
-      "type": "receive",
-      "payable": true
+      "type": "receive"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"implementation()\":{\"notice\":\"\\u67e5\\u8be2\\u5f53\\u524d\\u5408\\u7ea6 \"},\"upgradeTo(address)\":{\"notice\":\"\\u5347\\u7ea7\\u5408\\u7ea6 \"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/proxy/NftHeroProxy.sol\":\"NftHeroProxy\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\":{\"keccak256\":\"0x35b09b69aca3bc2633da8f47382a81ecf367efe57167a2114f60f9ec81988afa\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4dd39ae44599da9e6b59035de3cddcfaa8d7b2a45f1c887adf5a1e38315cf6cd\",\"dweb:/ipfs/QmcFVkc7m3MzxoiCWCb2yZuezqW7eQTEvnScNALXhdsyJu\"]},\"@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x8b2abd85d0ece7e866e100e9d47ca9cbec93c87cf71a8d267b2b93eb81f7d5e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fe9fa1beb63e4a09637701f783982ba80380d630d600c9cafe26b68bf58be1b2\",\"dweb:/ipfs/QmRA3GXhTWys88joD9x8xYhdjzvGwmDGLMMzGw3LxbSEge\"]},\"@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0x062b5a0f7cc6b0528fa350033759f3a15ba42afb57423d7c593753860f2c82e0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b3c8b4ec819fc9648ef5ae6b8edc474b2a631389fa73add4c4545e1918abe034\",\"dweb:/ipfs/Qmc8GzvTtCxR3mg3QuLRzycSMfsSjjZPyPALmLBjMxSGv6\"]},\"project:/contracts/proxy/Base.sol\":{\"keccak256\":\"0x3a21f5f66b3d5db9f896af4475c9d875d01f292f2cff782facfb3df1be46fa6f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7350c82d976a4f68c7eb4d619236ba64962270a707500b1a0b70ef68e1011b3c\",\"dweb:/ipfs/QmWD6CiALzRAK7AY4DLi1vwjBmBCJw42Ah6bUJUKCdjE6v\"]},\"project:/contracts/proxy/NftHeroProxy.sol\":{\"keccak256\":\"0xc7e37d24ae6e9e517052e095be66f2b79589a36189fed8b3180d093bb31d4d84\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3143820c05a04fcf57427ee8a2b1827279387b3eea2e8711932b697449b49599\",\"dweb:/ipfs/QmZud2d1efExbo4d23cZSMqxbWKG2aeFb3SBbrnkTxwwyW\"]}},\"version\":1}",
@@ -3136,18 +3133,18 @@
     "absolutePath": "project:/contracts/proxy/NftHeroProxy.sol",
     "exportedSymbols": {
       "NftHeroProxy": [
-        5724
+        6090
       ],
       "ProxyBase": [
-        5717
+        6083
       ]
     },
-    "id": 5725,
+    "id": 6091,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5719,
+        "id": 6085,
         "literals": [
           "solidity",
           "^",
@@ -3160,16 +3157,16 @@
       {
         "absolutePath": "project:/contracts/proxy/Base.sol",
         "file": "./Base.sol",
-        "id": 5721,
+        "id": 6087,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 5725,
-        "sourceUnit": 5718,
+        "scope": 6091,
+        "sourceUnit": 6084,
         "src": "60:45:23",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 5720,
+              "id": 6086,
               "name": "Base",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -3187,13 +3184,13 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 5722,
+              "id": 6088,
               "name": "ProxyBase",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 5717,
+              "referencedDeclaration": 6083,
               "src": "134:9:23"
             },
-            "id": 5723,
+            "id": 6089,
             "nodeType": "InheritanceSpecifier",
             "src": "134:9:23"
           }
@@ -3201,10 +3198,10 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 5724,
+        "id": 6090,
         "linearizedBaseContracts": [
-          5724,
-          5717,
+          6090,
+          6083,
           124,
           2142,
           170
@@ -3213,7 +3210,7 @@
         "nameLocation": "118:12:23",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 5725,
+        "scope": 6091,
         "src": "109:45:23",
         "usedErrors": []
       }
@@ -3224,18 +3221,18 @@
     "absolutePath": "project:/contracts/proxy/NftHeroProxy.sol",
     "exportedSymbols": {
       "NftHeroProxy": [
-        5724
+        6090
       ],
       "ProxyBase": [
-        5717
+        6083
       ]
     },
-    "id": 5725,
+    "id": 6091,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5719,
+        "id": 6085,
         "literals": [
           "solidity",
           "^",
@@ -3248,16 +3245,16 @@
       {
         "absolutePath": "project:/contracts/proxy/Base.sol",
         "file": "./Base.sol",
-        "id": 5721,
+        "id": 6087,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 5725,
-        "sourceUnit": 5718,
+        "scope": 6091,
+        "sourceUnit": 6084,
         "src": "60:45:23",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 5720,
+              "id": 6086,
               "name": "Base",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -3275,13 +3272,13 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 5722,
+              "id": 6088,
               "name": "ProxyBase",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 5717,
+              "referencedDeclaration": 6083,
               "src": "134:9:23"
             },
-            "id": 5723,
+            "id": 6089,
             "nodeType": "InheritanceSpecifier",
             "src": "134:9:23"
           }
@@ -3289,10 +3286,10 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 5724,
+        "id": 6090,
         "linearizedBaseContracts": [
-          5724,
-          5717,
+          6090,
+          6083,
           124,
           2142,
           170
@@ -3301,7 +3298,7 @@
         "nameLocation": "118:12:23",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 5725,
+        "scope": 6091,
         "src": "109:45:23",
         "usedErrors": []
       }
@@ -3349,13 +3346,11 @@
         }
       },
       "links": {},
-      "address": "0x883287B86aFac7ff8407B04164cE0FA674E796f6",
-      "transactionHash": "0xf4356dca8c83c941a7c4a077aa16c90d096209b6a48e3a81b8c5788a6f3c13b5"
+      "address": "0x03A3e1A1DfFB30D29383715C942994588c748c67"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-26T03:16:36.545Z",
-  "networkType": "ethereum",
+  "updatedAt": "2021-11-29T09:10:02.517Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

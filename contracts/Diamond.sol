@@ -14,7 +14,7 @@ contract Diamond is ERC20Upgradeable,OwnableUpgradeable {
         __Ownable_init();
         
         //初始个数
-        super._mint(msg.sender, 10000* 1e8);
+        super._mint(msg.sender, 10000* 1e18);
     }
 
     /** 管理员生成金币 */
@@ -24,6 +24,6 @@ contract Diamond is ERC20Upgradeable,OwnableUpgradeable {
 
     //精度
     function decimals() public override pure returns (uint8) {
-        return 8;
+        return 18;
     }
 }

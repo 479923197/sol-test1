@@ -54,8 +54,8 @@ contract Stake is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         goldInstance = Gold(_gold);
         nftHeroInst = NftHero(_NftHero);
         params["bonus_rate"] = 1;
-        params["base_block_bonus"] = uint256(0.01 * 1e8);
-        params["attr_block_bonus"] = uint256(0.005 * 1e8);
+        params["base_block_bonus"] = uint256(0.01 * 1e18);
+        params["attr_block_bonus"] = uint256(0.005 * 1e18);
     }
 
     function setNftHeroInst(address _NftHero) public onlyOwner {
@@ -211,12 +211,15 @@ contract Stake is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         return ret;
     } 
 
+    /**
+     * Always returns `IERC721Receiver.onERC721Received.selector`.
+     */
     function onERC721Received(
         address,
         address,
         uint256,
         bytes memory
-    ) public override returns (bytes4) {
+    ) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 

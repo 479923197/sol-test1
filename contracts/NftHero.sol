@@ -61,7 +61,7 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
 
     /** 抽卡 */
     function createCard() public payable {
-        uint256 cost = 1 * 1e8;
+        uint256 cost = 1 * 1e18;
         require(
             diamondInstance.balanceOf(msg.sender) >= cost,
             "balance < required"

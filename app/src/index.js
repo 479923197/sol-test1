@@ -2,6 +2,13 @@ import Web3 from "web3";
 import Diamond from "../../build/contracts/Diamond.json";
 import NftPlayer from "../../build/contracts/NftHero.json";
 import Stake from "../../build/contracts/Stake.json";
+import Marketplace from "../../build/contracts/Marketplace.json";
+
+const Config = {
+  market: {
+    fee_percent: 0.05
+  }
+};
 
 const App = {
   web3: null,
@@ -29,6 +36,13 @@ const App = {
         Stake.abi,
         Stake.networks[this.networkId].address,
       );
+      this.Marketplace = new web3.eth.Contract(
+        Marketplace.abi,
+        Marketplace.networks[this.networkId].address,
+      );
+      console.log("Marketplace instance:", this.Marketplace);
+
+      document.getElementsByClassName("erc20ToAdress")[0].value = NftPlayer.networks[this.networkId].address;
 
       //连接账号
       try {
@@ -51,6 +65,14 @@ const App = {
 
   //开卡
   createCardCall: function() {
+    this.web3.eth.estimateGas({
+      from: this.account,
+      to: this.nft._address,
+      data: this.nft.methods.createCard().encodeABI() 
+    }).then(function(ret){
+      console.log("estimateGas: " + ret);
+    });
+
     this.nft.once('createCardEvent', {}, function(error, event){ 
       if (!error) {
         let html = "<p>开卡结果 token:"+ App.web3.utils.toHex(event.returnValues.token) +"</p>";
@@ -87,8 +109,9 @@ const App = {
   approve: async function(){
     //授权
     let tokenAddress = NftPlayer.networks[this.networkId].address;
+    let cost = this.web3.utils.toHex(1e18);
 
-    await this.diamond.methods.approve(tokenAddress, 1e8).send({
+    await this.diamond.methods.approve(tokenAddress, cost).send({
       from: this.account, 
       gasLimit: this.web3.utils.toHex(90000),
       gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
@@ -98,12 +121,12 @@ const App = {
     });
   },
 
-  //获取授信额度
-  allowance: async function() {
-    //授权
-    let tokenAddress = NftPlayer.networks[this.networkId].address;
+  
+  //查询授信额度
+  getAllowance: async function (){
+    let toAddress = document.getElementsByClassName("erc20ToAdress")[0].value;
 
-    let allowce = await this.diamond.methods.allowance(this.account, tokenAddress).call();
+    let allowce = await this.diamond.methods.allowance(this.account, toAddress).call();
     document.getElementsByClassName("allowance")[0].innerHTML = allowce;
   },
 
@@ -147,13 +170,77 @@ const App = {
 
   //查询在质押
   viewStaked: async function() {
-    //授权
-    let tokenAddress = Stake.networks[this.networkId].address;
-
-    let allowce = await this.stake.methods.reviewStaked().call();
+    let allowce = await this.stake.methods.reviewStaked().call({
+      from: this.account, 
+      gasLimit: this.web3.utils.toHex(9000000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    });
     //document.getElementsByClassName("viewStaked")[0].innerHTML = allowce;
-    console.log("再质押卡片:", allowce);
+    console.log("在质押卡片:", allowce);
   },
+
+  //授权手续费
+  approveMarketFee: async function() {
+    let price = Math.floor(document.getElementsByClassName("put_price")[0].value * 1e18);
+    let fee = Math.floor(Config.market.fee_percent * price);
+    let tokenAddress = Marketplace.networks[this.networkId].address;
+
+    await this.diamond.methods.approve(tokenAddress, this.web3.utils.toHex(fee)).send({
+      from: this.account, 
+      gasLimit: this.web3.utils.toHex(90000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    }, (error,result)=>{
+      console.log("approve市场手续费"+fee+"，结果：", error, result);
+    });
+  },
+
+  //授权卡牌到市场
+  approveMarketHero: async function() {
+    let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
+    let tokenAddress = Marketplace.networks[this.networkId].address;
+
+    await this.nft.methods.approve(tokenAddress, token).send({
+      from: this.account, 
+      //gasLimit: this.web3.utils.toHex(40000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    }, (error,result)=>{
+      console.log("approve卡牌到市场，结果：", error, result);
+    });
+  },
+
+  //出售
+  createProduct: async function(){
+    let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
+    let price = this.web3.utils.toHex(Math.floor(document.getElementsByClassName("put_price")[0].value * 1e18));
+    
+    await this.Marketplace.methods.createProduct(token, price).send({
+      from: this.account, 
+      gasLimit: this.web3.utils.toHex(1000000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    }, (error,result)=>{
+      console.log("createProduct result", error, result)
+    });
+  },
+
+  //取回在售物品
+  withdrawProduct: async function(){
+    let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
+
+    await this.Marketplace.methods.withdrawProduct(token).send({
+      from: this.account, 
+      gasLimit: this.web3.utils.toHex(1000000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    }, (error,result)=>{
+      console.log("withdrawProduct result", error, result)
+    });
+  },
+
+  //查询我的在售
+  reviewMyProducts: async function(){
+    let result = await this.Marketplace.methods.reviewMyProducts().call();
+    console.log("我的在售卡片:", result);
+  },
+
 
   //签名
   sign: async function(){

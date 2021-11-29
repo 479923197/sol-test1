@@ -44,9 +44,8 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
     function initialize(address _diamond, address _NftHero) public initializer {
         diamondInstance = Diamond(_diamond);
         nftHeroInst = NftHero(_NftHero);
-        params["launch_rate"] = uint256(0.05 * 1e8); //上架收取手续费
-        params["deal_rate"] = uint256(0.05 * 1e8); //成交收取手续费
-        params["min_price"] = uint256(0.001 * 1e8); //最低价格
+        params["fee_percent"] = 5; //上架收取手续费百分比 5%
+        params["min_price"] = uint256(0.001 * 1e18); //最低价格
     }
 
     function setNftHeroInst(address _NftHero) public onlyOwner {
@@ -71,7 +70,16 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         require(_price > params["min_price"], "price 0.001 at least");
 
         //转账上架手续费
-        diamondInstance.transferFrom(msg.sender, address(this), _price);
+        uint256 fee = uint256(params["fee_percent"] * _price / 100);
+        //手续费不能为0
+        require(fee > 0, "fee must > 0");
+        //手续费不能高于价格
+        require(fee < _price, "fee must be less than price");
+        //查询授权
+        require(diamondInstance.allowance(msg.sender, address(this))  <= fee, "allowance not enough");
+        require(nftHeroInst.getApproved(tokenId) == address(this), "nft should approved to contract");
+        
+        diamondInstance.transferFrom(msg.sender, address(this), fee);
         //转账NFT
         nftHeroInst.safeTransferFrom(msg.sender, address(this), tokenId); 
         require(nftHeroInst.ownerOf(tokenId) == address(this), "create failed: nft belongs this contract already");
@@ -104,7 +112,7 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
 
 
     /** 取回 */
-    function withdraw(uint256 tokenId) public onlyStaker(tokenId) {
+    function withdrawProduct(uint256 tokenId) public onlyStaker(tokenId) {
         //清理数据
         delete receipt[tokenId];
         //退卡
@@ -151,12 +159,15 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         return ret;
     } 
 
+    /**
+     * Always returns `IERC721Receiver.onERC721Received.selector`.
+     */
     function onERC721Received(
         address,
         address,
         uint256,
         bytes memory
-    ) public override returns (bytes4) {
+    ) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
