@@ -1,156 +1,69 @@
 import Web3 from "web3";
-import Diamond from "../../build/contracts/Diamond.json";
-import NftPlayer from "../../build/contracts/NftHero.json";
-import Stake from "../../build/contracts/Stake.json";
-import Marketplace from "../../build/contracts/Marketplace.json";
-
-const Config = {
-  market: {
-    fee_percent: 0.05
-  }
-};
+import Frame from "./frame.js";
+import Config from "./config.js";
 
 const App = {
-  web3: null,
-  account: null,
-  networkId: 0,
-  coin: null,
-  meta: null,
-
-  start: async function() {
-    const { web3 } = this;
-
-    try {
-      // get contract instance
-      this.networkId = 9999;//await web3.eth.net.getId();
-      //const deployedNetwork = NftPlayer.networks[networkId];
-      this.nft = new web3.eth.Contract(
-        NftPlayer.abi,
-        NftPlayer.networks[this.networkId].address,
-      );
-      this.diamond = new web3.eth.Contract(
-        Diamond.abi,
-        Diamond.networks[this.networkId].address,
-      );
-      this.stake = new web3.eth.Contract(
-        Stake.abi,
-        Stake.networks[this.networkId].address,
-      );
-      this.Marketplace = new web3.eth.Contract(
-        Marketplace.abi,
-        Marketplace.networks[this.networkId].address,
-      );
-      console.log("Marketplace instance:", this.Marketplace);
-
-      document.getElementsByClassName("erc20ToAdress")[0].value = NftPlayer.networks[this.networkId].address;
-
-      //连接账号
-      try {
-        await ethereum.request({ method: 'eth_requestAccounts' });
-      } catch (error) {
-        console.error(error);
-      }
-
-      //读取账号
-      const accounts = await ethereum.request({ method: 'eth_accounts' });
-      console.log("登录账号",accounts)//受权成功后accounts能正常获取到帐号了
-      const accElement = document.getElementsByClassName("account")[0];
-      accElement.innerHTML = accounts[0];
-      this.account = accounts[0];
-
-    } catch (error) {
-      console.error("Could not connect to contract or chain.", error);
-    }
-  },
 
   //开卡
   createCardCall: function() {
-    this.web3.eth.estimateGas({
-      from: this.account,
-      to: this.nft._address,
-      data: this.nft.methods.createCard().encodeABI() 
-    }).then(function(ret){
-      console.log("estimateGas: " + ret);
-    });
-
-    this.nft.once('createCardEvent', {}, function(error, event){ 
-      if (!error) {
-        let html = "<p>开卡结果 token:"+ App.web3.utils.toHex(event.returnValues.token) +"</p>";
-        document.getElementsByClassName("createCard")[0].innerHTML = html;
-      }
-      console.log("触发开卡事件", error, event);
-    });
-
-    this.nft.methods.createCard().send({from: this.account})
-    .on('error', (error)=>{
-      console.error("抽卡发生错误", error);
-    });
+    /*
+    let param = {
+      from: Frame.account,
+      to: Frame.nft._address,
+      data: Frame.nft.methods.createCard().encodeABI() 
+    };
+    param.gas = await web3.eth.estimateGas(param);
+    
+    await web3.eth.sendTransaction(param, function(err, transactionHash) {
+      if (!err)
+        console.log(transactionHash);
+    });*/
+    Frame.send('nft', 'createCard', [], 'createCardEvent');
   },
 
   //获取我的所有卡片
-  getCards: async function() {
-    await this.nft.methods.getMyCards(this.account).call({}, (error,result)=>{
-      console.log("查卡结果", error, result);
-      
-      if (error) {
-        document.getElementsByClassName("getCards")[0].innerHTML = JSON.stringify(error || result);
-      } else {
-        let html = "";
-        for (let i=0; i< result[0].length; i++) {
-          let token = this.web3.utils.toHex(result[0][i]);
-          html += `<p>token:${token}; id:${result[1][i]}; lv:${result[5][i]}; attr:${result[2][i]},${result[3][i]},${result[4][i]}</p>`;
-        }
-        document.getElementsByClassName("getCards")[0].innerHTML = html;
+  getCards: function() {
+    Frame.call("nft", "getMyCards", [Frame.account], function(result){
+      let html = "";
+      for (let i=0; i< result[0].length; i++) {
+        let token = web3.utils.toHex(result[0][i]);
+        html += `<p>token:${token}; id:${result[1][i]}; lv:${result[5][i]}; attr:${result[2][i]},${result[3][i]},${result[4][i]}</p>`;
       }
+      document.getElementsByClassName("getCards")[0].innerHTML = html;
     });
   },
 
   //授信
-  approve: async function(){
+  approve: function(){
     //授权
-    let tokenAddress = NftPlayer.networks[this.networkId].address;
-    let cost = this.web3.utils.toHex(1e18);
-
-    await this.diamond.methods.approve(tokenAddress, cost).send({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(90000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
-    }, (error,result)=>{
-      console.log("approve结果of"+NftPlayer.networks[this.networkId].address, error, result);
-      document.getElementsByClassName("approve")[0].innerHTML = JSON.stringify(error || result);
-    });
+    let tokenAddress = Frame.nft._address;
+    let cost = web3.utils.toHex(1e18);
+    
+    Frame.send('diamond', 'approve', [tokenAddress, cost], 'Approval');
   },
 
   
   //查询授信额度
-  getAllowance: async function (){
+  getAllowance: function (){
     let toAddress = document.getElementsByClassName("erc20ToAdress")[0].value;
-
-    let allowce = await this.diamond.methods.allowance(this.account, toAddress).call();
-    document.getElementsByClassName("allowance")[0].innerHTML = allowce;
+    Frame.call("diamond", "allowance", [Frame.account, toAddress], function(allowce){
+      document.getElementsByClassName("allowance")[0].innerHTML = allowce;
+    });
   },
 
   //授权可质押
-  stakeApprove: async function() {
-    let stakeAddress = Stake.networks[this.networkId].address;
+  stakeApprove: function() {
+    let stakeAddress = Frame.stake._address;
     let token = Math.floor(document.getElementsByClassName("stake")[0].value);
 
-    await this.nft.methods.approve(stakeAddress, token).send({
-      from: this.account, 
-      //gasLimit: this.web3.utils.toHex(40000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
-    }, (error,result)=>{
-      console.log("approve结果of"+NftPlayer.networks[this.networkId].address, error, result);
-      document.getElementsByClassName("approve")[0].innerHTML = JSON.stringify(error || result);
-    });
+    Frame.send('nft', 'approve', [stakeAddress, token], 'Approval');
   },
 
   //查询授权
   getApproved: async function(){
     let token = Math.floor(document.getElementsByClassName("stake")[0].value);
 
-    let result = await this.nft.methods.getApproved(token).call();
-    console.log("approved to:", result);
+    let result = await Frame.nft.methods.getApproved(token).call();
     document.getElementsByClassName("getApproved")[0].innerHTML = "approved to:" + JSON.stringify(result);
   },
 
@@ -158,10 +71,10 @@ const App = {
   stakeNft: async function() {
     let token = Math.floor(document.getElementsByClassName("stake")[0].value);
 
-    await this.stake.methods.stakeNFT(token).send({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(1000000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    await Frame.stake.methods.stakeNFT(token).send({
+      from: Frame.account, 
+      gasLimit: web3.utils.toHex(1000000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     }, (error,result)=>{
       document.getElementsByClassName("stake")[0].innerHTML = JSON.stringify(error || result);
       console.log("stakeNft failed", error.message)
@@ -170,10 +83,10 @@ const App = {
 
   //查询在质押
   viewStaked: async function() {
-    let allowce = await this.stake.methods.reviewStaked().call({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(9000000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    let allowce = await Frame.stake.methods.reviewStaked().call({
+      from: Frame.account, 
+      gasLimit: web3.utils.toHex(9000000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     });
     //document.getElementsByClassName("viewStaked")[0].innerHTML = allowce;
     console.log("在质押卡片:", allowce);
@@ -183,12 +96,12 @@ const App = {
   approveMarketFee: async function() {
     let price = Math.floor(document.getElementsByClassName("put_price")[0].value * 1e18);
     let fee = Math.floor(Config.market.fee_percent * price);
-    let tokenAddress = Marketplace.networks[this.networkId].address;
+    let tokenAddress = Frame.market._address;
 
-    await this.diamond.methods.approve(tokenAddress, this.web3.utils.toHex(fee)).send({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(90000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    await Frame.diamond.methods.approve(tokenAddress, web3.utils.toHex(fee)).send({
+      from: Frame.account, 
+      gasLimit: web3.utils.toHex(90000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     }, (error,result)=>{
       console.log("approve市场手续费"+fee+"，结果：", error, result);
     });
@@ -197,12 +110,12 @@ const App = {
   //授权卡牌到市场
   approveMarketHero: async function() {
     let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
-    let tokenAddress = Marketplace.networks[this.networkId].address;
+    let tokenAddress = Frame.market._address;
 
-    await this.nft.methods.approve(tokenAddress, token).send({
-      from: this.account, 
-      //gasLimit: this.web3.utils.toHex(40000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    await Frame.nft.methods.approve(tokenAddress, token).send({
+      from: Frame.account, 
+      //gasLimit: web3.utils.toHex(40000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     }, (error,result)=>{
       console.log("approve卡牌到市场，结果：", error, result);
     });
@@ -211,12 +124,12 @@ const App = {
   //出售
   createProduct: async function(){
     let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
-    let price = this.web3.utils.toHex(Math.floor(document.getElementsByClassName("put_price")[0].value * 1e18));
+    let price = web3.utils.toHex(Math.floor(document.getElementsByClassName("put_price")[0].value * 1e18));
     
-    await this.Marketplace.methods.createProduct(token, price).send({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(1000000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    await Frame.market.methods.createProduct(token, price).send({
+      from: Frame.account, 
+      gasLimit: web3.utils.toHex(1000000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     }, (error,result)=>{
       console.log("createProduct result", error, result)
     });
@@ -226,10 +139,10 @@ const App = {
   withdrawProduct: async function(){
     let token = Math.floor(document.getElementsByClassName("put_market")[0].value);
 
-    await this.Marketplace.methods.withdrawProduct(token).send({
-      from: this.account, 
-      gasLimit: this.web3.utils.toHex(1000000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('20', 'gwei'))
+    await Frame.market.methods.withdrawProduct(token).send({
+      from: Frame.account, 
+      gasLimit: web3.utils.toHex(1000000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei'))
     }, (error,result)=>{
       console.log("withdrawProduct result", error, result)
     });
@@ -237,32 +150,31 @@ const App = {
 
   //查询我的在售
   reviewMyProducts: async function(){
-    let result = await this.Marketplace.methods.reviewMyProducts().call();
+    let result = await Frame.market.methods.reviewMyProducts().call();
     console.log("我的在售卡片:", result);
   },
 
 
   //签名
   sign: async function(){
-    let tokenAddress = NftPlayer.networks[this.networkId].address;
+    let tokenAddress = Frame.nft._address;
     const tx = {
-      from: this.account,
+      from: Frame.account,
       to: tokenAddress,
-      data: this.diamond.methods.allowance(this.account, tokenAddress).encodeABI() 
+      data: Frame.diamond.methods.allowance(Frame.account, tokenAddress).encodeABI() 
     };
-    await this.web3.eth.sign( tx, tx.from, console.log);
+    await web3.eth.sign( tx, tx.from, console.log);
   }
 };
 
 window.App = App;
 
 window.addEventListener("load", function() {
-  //http不支持事件监听已被废弃，ws可以
-  App.web3 = new Web3(window.web3.currentProvider||new Web3.providers.WebsocketProvider('ws://127.0.0.1:9545'));
+  Frame.initAccount();
+  Frame.initContract();
 
-  console.log("web3 version:", App.web3.version);
-  console.log("web3 givenProvider:", Web3.givenProvider);
-  console.log("web3 currentProvider:", window.ethereum);
+  //开启调试
+  window.debug = true;
 
-  App.start();
+  document.getElementsByClassName("erc20ToAdress")[0].value = Config.contract_nft.address;
 });
