@@ -1,21 +1,47 @@
 import Web3 from "web3";
 import Config from "./config.js";
+import ContractEvents from "./event.js";
 
 class frame {
 
+    web3 = null;
     account = null;
-    nft = null;
-    diamond = null;
-    stake = null;
-    market = null;
+    contracts = {};
+    handledEvents = {};
 
-    constructor()
+    async init() {
+        if (await this.initProvider()) {
+            await this.initAccount();
+            await this.initContract();
+            await this.listen(ContractEvents);
+            return true;
+        }
+        return false;
+    }
+
+    async initProvider()
     {
-        window.web3 = new Web3(window.web3.currentProvider||new Web3.providers.WebsocketProvider( Config.rpc_addr ));
+        try {
+            /**
+             * 直接连接配置的rpc地址做provider，而不是通过this.web3.setProvider更改Web3.givenProvider
+             */
+            this.web3 = await new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider(Config.rpc_addr));
 
-        this.debug("web3 version:", web3.version);
-        this.debug("web3 givenProvider:", Web3.givenProvider);
-        this.debug("web3 currentProvider:", window.ethereum);
+            //检查chainID
+            let networkId = await this.web3.eth.net.getId();
+            if (networkId != Config.networkId) {
+                console.error(`currentProvider chainID ${networkId} not same with setting ${Config.networkId}`);
+            }
+
+            //web3加入到全局变量，方便调试
+            if (window.xdebug) {
+                window.web3Debugger = this.web3;
+            }
+            this.xdebug("web3 version:", Web3.version);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     async initAccount() {
@@ -31,7 +57,7 @@ class frame {
           const accounts = await ethereum.request({ method: 'eth_accounts' });
           this.account = accounts[0];
 
-          this.debug("登录账号",accounts)//受权成功后accounts能正常获取到帐号了
+          this.xdebug("登录账号",accounts)//受权成功后accounts能正常获取到帐号了
           document.getElementsByClassName("account")[0].innerHTML = accounts[0];
         } catch (error) {
           console.error("Could not connect to contract or chain.", error);
@@ -39,87 +65,115 @@ class frame {
     }
 
     async initContract() {
-        this.nft = new web3.eth.Contract(
-            Config.contract_nft.abi,
-            Config.contract_nft.address,
-          );
-          this.diamond = new web3.eth.Contract(
-            Config.contract_diamond.abi,
-            Config.contract_diamond.address,
-          );
-          this.stake = new web3.eth.Contract(
-            Config.contract_stake.abi,
-            Config.contract_stake.address,
-          );
-          this.market = new web3.eth.Contract(
-            Config.contract_market.abi,
-            Config.contract_market.address,
-          );
+        let contractCfgList = Config.contractList;
 
-          this.debug("market instance:", this.market);
+        for (var k in contractCfgList) {
+            let contractCfg = contractCfgList[k];
+            this.contracts[k] = new this.web3.eth.Contract(
+                contractCfg.abi,
+                contractCfg.address,
+            );
+        }
     }
 
     /** 合约执行 */
-    send(contractName, contractMethod, param, eventName, callback) {
-        if (eventName) {
-            this[contractName].once(eventName, {}, function(error, event){ 
-                if (error)
-                  console.error(`watch event:${eventName} error`, error);
-                else {
-                    //整合事件中的值
-                    let eventValue = [];
-                    while (true) {
-                        if (event.returnValues && event.returnValues[eventValue.length] != undefined) {
-                            eventValue[eventValue.length] = event.returnValues[eventValue.length];
-                        } else {
-                            break;
-                        }
-                    }
-                    this.debug(`emit event ${eventName}`, event.returnValues);
-                    if (callback) {
-                        callback(...eventValue);
-                    }
-                }
-            });
+    send(contractName, contractMethod, param) {
+        if (!this.web3 && !this.init()) {
+            return;
         }
-
-        this[contractName].methods[contractMethod](...param).send({
-            from: this.account
+        let _this = this;
+        
+        this.contracts[contractName].methods[contractMethod](...param).send({
+            from: _this.account
         }, (error,result)=>{
-            let action = contractName + "." + contractMethod;
+            let action = `【${contractName}->${contractMethod}】`;
 
             if (error) {
                 if (error.code == 4001) {
-                    this.debug(action, "user denied"); //metamask拒绝签名
+                    _this.xdebug(action, "user denied"); //metamask拒绝签名
                 } else {
                     console.error(action, error);
                 }
             } else {
-                this.debug(`${action} completed`);
+                _this.xdebug(`send ${action} completed`);
             }
         })
     }
 
     /** 合约调用 */
     call(contractName, contractMethod, param, callback) {
-        this[contractName].methods[contractMethod](...param).call({
-            from: this.account
+        if (!this.web3 && !this.init()) {
+            return;
+        }
+        let _this = this;
+        
+        //预估gas
+        /*web3.eth.estimateGas({
+            from: this.account,
+            to: this.contracts[contractName]._address,
+            data: this.contracts[contractName].methods[contractMethod](...param).encodeABI() 
+        }, (error, gasLimit)=>{
+            if (!error) {*/
+
+        //合约调用
+        _this.contracts[contractName].methods[contractMethod](...param).call({
+            from: _this.account,
+            //gas: _this.web3.toHex(Math.floor(gasLimit * 2)),
         }, (error, result)=>{
-            let action = contractName + "." + contractMethod;
+            let action = `【${contractName}->${contractMethod}】`;
 
             if (error) {
                 console.error(action, error);
             } else {
-                this.debug(`${action} completed`);
+                _this.xdebug(`call ${action} completed`, result);
                 callback(result);
             }
-        })
+        });
+    }
+
+    /** 事件监听 */
+    listen(optionsArr) {
+        let _this = this;
+        for (let i=0; i< optionsArr.length; i++) {
+            let contractName = optionsArr[i]['contract'];
+            let eventName = optionsArr[i]['event'];
+            let accountKey = optionsArr[i]['account_key'];
+            let callback = optionsArr[i]['callback'];
+
+            _this.contracts[contractName]['events'][eventName]({}, function(error, event){
+                if (accountKey && 
+                    _this.handledEvents[event.transactionHash] == undefined &&
+                    event.returnValues[accountKey].toLowerCase() == _this.account.toLowerCase()) 
+                {
+                    _this.xdebug(`emit my event 【${eventName}】, eventValues:`, event.returnValues);
+
+                    //防止重复触发
+                    _this.handledEvents[event.transactionHash] = 1;
+
+                    //整合事件中的值
+                    let eventValue = [];
+                    while (true) {
+                        if (event.returnValues[eventValue.length] != undefined) {
+                            eventValue[eventValue.length] = event.returnValues[eventValue.length];
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    // 有回调函数时，要求触发事件的第一个参数必须是本用户，即合约执行人
+                    if (callback ) {
+                        callback(...eventValue);
+                    }
+                }
+            });
+            _this.xdebug(`event 【${eventName}】 of ${_this.account} registered`);
+        }
     }
 
     /** debug模式 */
-    debug(...args) {
-        if (window.debug)
-            this.debug(...args);
+    xdebug(...args) {
+        if (window.xdebug)
+            console.log(...args);
     }
 }
 

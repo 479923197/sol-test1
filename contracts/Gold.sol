@@ -10,7 +10,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 contract Gold is ERC20Upgradeable,OwnableUpgradeable {
 
     function initialize() public initializer {
-        __ERC20_init("FM gold","FMG");
+        __ERC20_init("Train Pie","TPIE");
         __Ownable_init();
 
         //初始个数

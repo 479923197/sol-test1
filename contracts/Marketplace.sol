@@ -6,12 +6,13 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 //import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./NftHero.sol";
 import "./Diamond.sol";
 
 /** nft市场 */
-contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
+contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable,PausableUpgradeable {
     using SafeMathUpgradeable for uint256;
 
     Diamond diamondInstance;
@@ -42,6 +43,9 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
     }
 
     function initialize(address _diamond, address _NftHero) public initializer {
+        __Ownable_init();
+        __Pausable_init();
+        
         diamondInstance = Diamond(_diamond);
         nftHeroInst = NftHero(_NftHero);
         params["fee_percent"] = 5; //上架收取手续费百分比 5%
@@ -92,7 +96,7 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         //该用户质押的tokens中加入该token
         userTokens[msg.sender].push(tokenId);
 
-        emit onNftLaunch(msg.sender, tokenId, block.number);
+        emit onCreateProduct(msg.sender, tokenId, _price);
     }
 
     /** 查看我的在售物品 */
@@ -117,7 +121,7 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         delete receipt[tokenId];
         //退卡
         nftHeroInst.safeTransferFrom(address(this), msg.sender, tokenId);
-        emit onNftWithdraw(msg.sender, tokenId, block.number);
+        emit onNftWithdraw(msg.sender, tokenId);
 
         //该用户质押的tokens中去掉该token
         userTokens[msg.sender] = _arrRemove(userTokens[msg.sender], tokenId);
@@ -171,7 +175,7 @@ contract Marketplace is IERC721ReceiverUpgradeable,OwnableUpgradeable {
         return this.onERC721Received.selector;
     }
 
-    event onNftLaunch(address indexed staker, uint256 tokenId, uint256 blockNumber);
-    event onNftWithdraw(address indexed staker, uint256 tokenId, uint256 blockNumber);
+    event onCreateProduct(address indexed staker, uint256 tokenId, uint256 price);
+    event onNftWithdraw(address indexed staker, uint256 tokenId);
     event onBuy(address indexed comsumer, address indexed staker, uint256 tokenId, uint256 price);
 }

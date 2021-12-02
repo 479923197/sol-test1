@@ -3,11 +3,12 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./Diamond.sol";
 import "./lib/HeroPool.sol";
 
 /** 球员卡/道具 */
-contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
+contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
 
     Diamond diamondInstance;
     HeroPool heroPoolInstance;
@@ -37,6 +38,7 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
     function initialize(Diamond _diamondInstance, HeroPool _heroPoolInstance) public initializer {
         __ERC721_init("FM Token Card", "FMC");
         __Ownable_init();
+        __Pausable_init();
         
         diamondInstance = _diamondInstance;
         heroPoolInstance = _heroPoolInstance;
@@ -77,7 +79,7 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
 
         //mint会触发_beforeTokenTransfer
         super._mint(msg.sender, _tokenId);
-        emit createCardEvent(_tokenId, id,li,min,zhi);
+        emit createCardEvent(msg.sender, _tokenId, id,li,min,zhi);
     }
 
     /** 获取我的所有卡 */
@@ -147,6 +149,6 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable {
         return uint256(random % (_max-_min)) + _min;
     }
 
-    event createCardEvent(uint256 token, uint hero_id, uint li, uint min, uint zhi);
+    event createCardEvent(address owner, uint256 token, uint hero_id, uint li, uint min, uint zhi);
     event transferCardEvent(address from, address to, uint256 tokenId);
 }

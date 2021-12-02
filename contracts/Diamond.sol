@@ -10,7 +10,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 contract Diamond is ERC20Upgradeable,OwnableUpgradeable {
 
     function initialize() public initializer {
-        __ERC20_init("FM Diamond","FMD");
+        __ERC20_init("Tamer Token","TMT");
         __Ownable_init();
         
         //初始个数

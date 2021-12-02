@@ -6,11 +6,12 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./NftHero.sol";
 import "./Gold.sol";
 
 /** NFT质押 */
-contract Stake is IERC721ReceiverUpgradeable,OwnableUpgradeable {
+contract Stake is IERC721ReceiverUpgradeable,OwnableUpgradeable,PausableUpgradeable {
     using SafeMathUpgradeable for uint256;
 
     Gold goldInstance;
@@ -51,6 +52,9 @@ contract Stake is IERC721ReceiverUpgradeable,OwnableUpgradeable {
     }
 
     function initialize(address _gold, address _NftHero) public initializer {
+        __Ownable_init();
+        __Pausable_init();
+        
         goldInstance = Gold(_gold);
         nftHeroInst = NftHero(_NftHero);
         params["bonus_rate"] = 1;
