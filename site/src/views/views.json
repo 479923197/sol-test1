@@ -1,0 +1,14 @@
+[
+    {
+        "url": "index"
+    },
+    {
+        "url": "charts",
+        "echarts": true
+    },
+    {
+        "url": "test"
+    }
+]
+
+
