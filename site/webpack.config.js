@@ -69,7 +69,7 @@ if (process.env.NODE_ENV === 'prod') {
             compress: true,
             hot: true,
             host: 'localhost', // 0.0.0.0 localhost
-            port: 9000,
+            port: 9001,
             overlay: {
                 warnings: false,
                 errors: true

@@ -2,11 +2,28 @@ import '../../assets/Common';
 import './index.scss';
 import './index.html';
 
-// 返回顶部按钮
-Helper.backTop();
+import Web3 from "web3";
+import Frame from "../../business/frame";
+// import Config from "../../assets/js/business/config";
 
-// 监听滚动事件，更改navbar背景色透明度
-$(window).scroll(function () {
-    let s = $(window).scrollTop();
-    $('.navbar-warp').css('background-color', `rgba(255, 255, 255, ${s / 120})`);
-});
+// 返回顶部按钮
+// Helper.backTop();
+
+// 开启调试
+window.xdebug = true;
+  
+(async function(){
+  await Frame.init();
+
+  // 授权
+  $("#chouka_approve_btn").on("click", ()=>{
+    let tokenAddress = Frame.contracts['nft']._address;
+    let cost = Web3.utils.toHex(1e18);
+    Frame.send('diamond', 'approve', [tokenAddress, cost]);
+  })
+
+  // 抽卡
+  $("#chouka_btn").on("click", ()=>{
+    Frame.send('nft', 'createCard', []);
+  })
+})();
