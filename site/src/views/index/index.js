@@ -13,7 +13,14 @@ import Frame from "../../business/frame";
 window.xdebug = true;
   
 (async function(){
-  await Frame.init();
+
+  // 登录
+  $("#login_btn").on('click', async ()=>{
+    await Frame.init();
+    if (Frame.account != null) {
+      $("#login_btn").text(Frame.account.substr(0,3)+ "..."+ Frame.account.substr(-4,4));
+    }
+  });
 
   // 授权
   $("#chouka_approve_btn").on("click", ()=>{
