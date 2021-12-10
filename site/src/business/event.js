@@ -27,7 +27,7 @@ export default [
         account_key: 'owner',
         callback: function(owner, tokenid, heroid, li, min, zhi) {
             $("#chouka_btn").addClass("hide")
-            $("#chouka_approve_btn").removeClass("hide")
+            $("#chouka_done").removeClass("hide")
             $("#kabei_wrapper").addClass("hide")
 
             let wp = $("#card_wrapper")

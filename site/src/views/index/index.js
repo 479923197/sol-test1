@@ -33,4 +33,12 @@ window.xdebug = true;
   $("#chouka_btn").on("click", ()=>{
     Frame.send('nft', 'createCard', []);
   })
+
+  //确定
+  $("#chouka_done").on('click', ()=>{
+    $("#chouka_done").addClass("hide")
+    $("#chouka_approve_btn").removeClass("hide")
+    $("#card_wrapper").addClass("hide")
+    $("#kabei_wrapper").removeClass("hide")
+  })
 })();
