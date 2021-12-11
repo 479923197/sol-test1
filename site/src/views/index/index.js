@@ -14,6 +14,10 @@ window.xdebug = true;
   
 (async function(){
 
+  if (Frame.account != null) {
+    $("#login_btn").text(Frame.account.substr(0,3)+ "..."+ Frame.account.substr(-4,4));
+  }
+
   // 登录
   $("#login_btn").on('click', async ()=>{
     await Frame.init();

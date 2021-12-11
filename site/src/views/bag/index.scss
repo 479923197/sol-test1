@@ -1,49 +1,8 @@
-/**
-    这里放一些自定义的全局css
- */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: #fff;
-}
-
-/* 滚动条默认显示样式 */
-::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    height: 50px;
-    outline-offset: -2px;
-    outline: 2px solid #cddc39;
-    -webkit-border-radius: 4px;
-    border: 2px solid #fff;
-}
-
-/* 鼠标点击滚动条显示样式 */
-::-webkit-scrollbar-thumb:hover {
-    background-color: #00bcd4;
-    height: 50px;
-    -webkit-border-radius: 4px;
-}
-
-/* 滚动条模块大小 */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-/* 滚动框背景样式 */
-::-webkit-scrollbar-track-piece {
-    background-color: #fff;
-    -webkit-border-radius: 0;
-}
-
-
 /*********************************** 菜单 *********************************/
 .navbar-warp {
     //position: fixed;
     width: 100%;
     z-index: 1;
-    margin-bottom:2rem;
 }
 
 .navbar-logo {
@@ -69,17 +28,6 @@ html, body {
         &:hover {
             //border-bottom: 2px solid #ed4700;
             box-shadow: inset 0 -2px 0 #ed4700;
-        }
-    }
-    > a.login_btn {
-        width: 6rem;
-        height: 1.8rem;
-        text-align: center;
-        border-radius: 0.9rem;
-        line-height: 1.8rem;
-        color:#ffb603;
-        &:hover {
-            box-shadow: none;
         }
     }
 }
@@ -117,13 +65,13 @@ html, body {
         width: 4rem;
     }
     .li {
-        background-image: url(../img/attr/li.png);
+        background-image: url(../../assets/img/attr/li.png);
     }
     .min {
-        background-image: url(../img/attr/min.png);
+        background-image: url(../../assets/img/attr/min.png);
     }
     .zhi {
-        background-image: url(../img/attr/zhi.png);
+        background-image: url(../../assets/img/attr/zhi.png);
     }
 }
 
@@ -155,4 +103,18 @@ html, body {
 }
 .hide {
     display:none;
+}
+
+
+.card_bk {
+    margin:2rem auto;
+    width: 18rem;
+}
+.chouka_btn {
+    width:8rem;
+    height:3rem;
+    line-height:3rem;
+    border-radius: 1.5rem;
+    color:#dfe9ac;
+    margin: 1rem 0 2rem;
 }
