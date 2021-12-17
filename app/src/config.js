@@ -1,4 +1,5 @@
 import Diamond from "../../build/contracts/Diamond.json";
+import Gold from "../../build/contracts/Gold.json";
 import NftPlayer from "../../build/contracts/NftHero.json";
 import Stake from "../../build/contracts/Stake.json";
 import Marketplace from "../../build/contracts/Marketplace.json";
@@ -18,6 +19,10 @@ class config {
         'diamond': {
             abi: Diamond.abi,
             address: Diamond.networks[this.networkId].address,
+        },
+        'gold': {
+            abi: Gold.abi,
+            address: Gold.networks[this.networkId].address,
         },
         'nft': {
             abi: NftPlayer.abi,

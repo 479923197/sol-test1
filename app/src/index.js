@@ -39,8 +39,6 @@ const App = {
     let tokenAddress = Frame.contracts['nft']._address;
     let cost = Web3.utils.toHex(1e18);
     
-    alert("cost" + cost);
-    
     Frame.send('diamond', 'approve', [tokenAddress, cost]);
   },
 
@@ -161,8 +159,9 @@ window.addEventListener("load", function() {
   
   (async function(){
     await Frame.init();
+
+    document.getElementsByClassName("account")[0].innerHTML = Frame.account;
   })();
   
-
   document.getElementsByClassName("erc20ToAdress")[0].value = Config.contractList.nft.address;
 });

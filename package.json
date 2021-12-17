@@ -20,5 +20,8 @@
     "@openzeppelin/contracts": "^4.3.2",
     "@openzeppelin/contracts-upgradeable": "^4.3.2",
     "@openzeppelin/truffle-upgrades": "^1.9.1"
+  },
+  "devDependencies": {
+    "@webpack-cli/generators": "^2.4.1"
   }
 }

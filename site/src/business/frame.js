@@ -152,7 +152,7 @@ class frame {
                     _this.handledEvents[eventKey] == undefined &&
                     event.returnValues[accountKey].toLowerCase() == _this.account.toLowerCase()) 
                 {
-                    _this.xdebug(`emit my event 【${eventName}】, eventValues:`, event.returnValues);
+                    _this.xdebug(`emit my event 【${eventName}】, eventValues:`, event);
 
                     // 防止重复触发
                     _this.handledEvents[eventKey] = 1;

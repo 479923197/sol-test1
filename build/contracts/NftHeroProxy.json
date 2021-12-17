@@ -3136,18 +3136,18 @@
     "absolutePath": "project:/contracts/proxy/NftHeroProxy.sol",
     "exportedSymbols": {
       "NftHeroProxy": [
-        6226
+        6286
       ],
       "ProxyBase": [
-        6219
+        6279
       ]
     },
-    "id": 6227,
+    "id": 6287,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6221,
+        "id": 6281,
         "literals": [
           "solidity",
           "^",
@@ -3160,16 +3160,16 @@
       {
         "absolutePath": "project:/contracts/proxy/Base.sol",
         "file": "./Base.sol",
-        "id": 6223,
+        "id": 6283,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 6227,
-        "sourceUnit": 6220,
+        "scope": 6287,
+        "sourceUnit": 6280,
         "src": "60:45:24",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 6222,
+              "id": 6282,
               "name": "Base",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -3187,13 +3187,13 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 6224,
+              "id": 6284,
               "name": "ProxyBase",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 6219,
+              "referencedDeclaration": 6279,
               "src": "134:9:24"
             },
-            "id": 6225,
+            "id": 6285,
             "nodeType": "InheritanceSpecifier",
             "src": "134:9:24"
           }
@@ -3201,10 +3201,10 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 6226,
+        "id": 6286,
         "linearizedBaseContracts": [
-          6226,
-          6219,
+          6286,
+          6279,
           124,
           2255,
           170
@@ -3213,7 +3213,7 @@
         "nameLocation": "118:12:24",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 6227,
+        "scope": 6287,
         "src": "109:45:24",
         "usedErrors": []
       }
@@ -3224,18 +3224,18 @@
     "absolutePath": "project:/contracts/proxy/NftHeroProxy.sol",
     "exportedSymbols": {
       "NftHeroProxy": [
-        6226
+        6286
       ],
       "ProxyBase": [
-        6219
+        6279
       ]
     },
-    "id": 6227,
+    "id": 6287,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6221,
+        "id": 6281,
         "literals": [
           "solidity",
           "^",
@@ -3248,16 +3248,16 @@
       {
         "absolutePath": "project:/contracts/proxy/Base.sol",
         "file": "./Base.sol",
-        "id": 6223,
+        "id": 6283,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 6227,
-        "sourceUnit": 6220,
+        "scope": 6287,
+        "sourceUnit": 6280,
         "src": "60:45:24",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 6222,
+              "id": 6282,
               "name": "Base",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -3275,13 +3275,13 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 6224,
+              "id": 6284,
               "name": "ProxyBase",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 6219,
+              "referencedDeclaration": 6279,
               "src": "134:9:24"
             },
-            "id": 6225,
+            "id": 6285,
             "nodeType": "InheritanceSpecifier",
             "src": "134:9:24"
           }
@@ -3289,10 +3289,10 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 6226,
+        "id": 6286,
         "linearizedBaseContracts": [
-          6226,
-          6219,
+          6286,
+          6279,
           124,
           2255,
           170
@@ -3301,7 +3301,7 @@
         "nameLocation": "118:12:24",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 6227,
+        "scope": 6287,
         "src": "109:45:24",
         "usedErrors": []
       }
@@ -3349,12 +3349,12 @@
         }
       },
       "links": {},
-      "address": "0x5FC1A5551F1aDed682e6A221AD771b85B84eD9C1",
-      "transactionHash": "0x3cd17c2e5993096c45d533e81bb69f2364a61fe20b2eb07d85c348a41fa42471"
+      "address": "0x7428C50Fe8867B961088877867548765054EFcfe",
+      "transactionHash": "0x8ee3a5cd10ee8e88a1c810afbf2589d19de62a2ac64fc423489c833cea32f6fc"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-02T09:58:38.655Z",
+  "updatedAt": "2021-12-17T10:14:40.276Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

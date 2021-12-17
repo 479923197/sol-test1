@@ -20,7 +20,7 @@ window.xdebug = true;
   }
 
   Frame.call("nft", "getMyCards", [Frame.account], function(result){
-    let basehtml = $(".card")[0].outerHTML;console.log("html", basehtml)
+    let basehtml = $(".card")[0].outerHTML;
 
     for (let i=0; i< result[0].length; i++) {
       let wp = $(basehtml).removeClass("hide")
@@ -29,7 +29,7 @@ window.xdebug = true;
       wp.find(".min").text(result[3][i])
       wp.find(".zhi").text(result[4][i])
       wp.find(".card-title").text(`#${result[0][i]}`)
-      //wp = wp.find(".card-img-top").attr("src", require(`../assets/img/hero/${result[1][i]}.jpg`))
+      //wp.find(".card-img-top").attr("src", require(`../assets/img/hero/${result[1][i]}.jpg`))
       $("#main-business").append(wp);
       //let token = Web3.utils.toHex(result[0][i]);
     }

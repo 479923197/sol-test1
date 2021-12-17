@@ -58,7 +58,6 @@ class frame {
           this.account = accounts[0];
 
           this.xdebug("登录账号",accounts)//受权成功后accounts能正常获取到帐号了
-          document.getElementsByClassName("account")[0].innerHTML = accounts[0];
         } catch (error) {
           console.error("Could not connect to contract or chain.", error);
         }

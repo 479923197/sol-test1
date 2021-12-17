@@ -19,14 +19,6 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
     uint256 private countor;
     //卡片id,类型
     mapping(uint256 => uint256) herosType;
-    //卡片信息
-    struct HeroInfo {
-        uint id;
-        uint li; //力量
-        uint min; //敏捷
-        uint zhi; //智力
-        uint lv; //等级
-    }
     //球员池
     //生成 tokenId => HeroInfo
     mapping(uint256 => HeroInfo) public cardDB;
@@ -34,6 +26,15 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
     mapping(address => uint256[]) private tokenDB;
     //用户随机英雄的次数、
     mapping(address => uint) private userRandtimes;
+    //卡片信息
+    struct HeroInfo {
+        uint id;
+        uint li; //力量
+        uint min; //敏捷
+        uint zhi; //智力
+        uint lv; //等级
+        uint exp; //经验
+    }
 
     function initialize(Diamond _diamondInstance, HeroPool _heroPoolInstance) public initializer {
         __ERC721_init("FM Token Card", "FMC");
@@ -75,21 +76,29 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
         //随机卡片
         uint id; uint li; uint min; uint zhi;
         (id,li,min,zhi) = heroPoolInstance.rand(++totalRandTimes,  ++userRandtimes[_msgSender()]);
-        cardDB[_tokenId] = HeroInfo(id,li,min,zhi,1);
+        cardDB[_tokenId] = HeroInfo(id,li,min,zhi,1,0);
 
         //mint会触发_beforeTokenTransfer
         super._mint(msg.sender, _tokenId);
         emit createCardEvent(msg.sender, _tokenId, id,li,min,zhi);
     }
 
+    /* 升级 */
+    function upgrade(uint256 tokenId) public {
+        uint256 newLv = 0;
+        uint256 newExp = 0;
+        emit upgradeEvent(msg.sender, tokenId, newLv, newExp);
+    }
+
     /** 获取我的所有卡 */
-    function getMyCards(address _addr) public view returns ( uint256[] memory, uint[] memory, uint[] memory, uint[] memory, uint[] memory, uint[] memory) {
+    function getMyCards(address _addr) public view returns ( uint256[] memory, uint[] memory, uint[] memory, uint[] memory, uint[] memory, uint[] memory, uint[] memory) {
         uint256[] memory _tokens = tokenDB[_addr];
         uint[] memory _hero_ids = new uint[](_tokens.length);
         uint[] memory _li = new uint[](_tokens.length);
         uint[] memory _min = new uint[](_tokens.length);
         uint[] memory _zhi = new uint[](_tokens.length);
         uint[] memory _lv = new uint[](_tokens.length);
+        uint[] memory _exp = new uint[](_tokens.length);
 
         if (_tokens.length > 0) {
             for (uint i=0; i<_tokens.length; i++) {
@@ -99,10 +108,11 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
                 _min[i] = cardDB[ _tokenId ].min;
                 _zhi[i] = cardDB[ _tokenId ].zhi;
                 _lv[i] = cardDB[ _tokenId ].lv;
+                _exp[i] = cardDB[ _tokenId ].exp;
             }
         }
 
-        return (_tokens, _hero_ids, _li, _min, _zhi, _lv);
+        return (_tokens, _hero_ids, _li, _min, _zhi, _lv, _exp);
     }
 
     //删除token
@@ -151,4 +161,5 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
 
     event createCardEvent(address owner, uint256 token, uint hero_id, uint li, uint min, uint zhi);
     event transferCardEvent(address from, address to, uint256 tokenId);
+    event upgradeEvent(address owner, uint256 _tokenId, uint newLv, uint newExp);
 }
