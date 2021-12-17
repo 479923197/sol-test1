@@ -1,0 +1,63 @@
+<!DOCTYPE html lang='zh-cn'>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>gm tools</title>
+  </head>
+  <style>
+    input {
+      display: block;
+      min-width: 300px;
+      margin:auto 5px;
+      float: left;
+    }
+    .val{
+      width:120px;
+      height:26px;
+      border:1px solid #666;
+      margin:0 5px;
+    }
+    .holder, .holder>div {
+      display:block;
+      width:100%;
+      float:left;
+      margin:3px 0;
+    }
+    .holder > div > div {
+      float:left;
+    }
+  </style>
+  <body>
+    <h1>账号</h1>
+    <p><strong class="account">loading...</strong></p>
+
+    <div class="diamond holder">
+      <br>--------------------------------------- diamond -------------------------------------------<br>
+      <div><div>地址</div><div class="address"></div></div>
+      <div><div>owner</div><div class="owner val"></div></div>
+      <div><div>当前供应量</div><div class="totalSupply val"></div><button>查看</button></div>
+      <div><div>转移owner到</div><input type="text" placeholder="地址" /><button>确定</button></div>
+      <div><div>mint</div><input type="text" placeholder="数量" /><button>确定</button></div>
+    </div>
+
+    <div class="gold holder">
+      --------------------------------------- gold -------------------------------------------<br>
+      <div><div>地址</div><div class="address val"></div></div>
+      <div><div>owner</div><div class="owner val"></div></div>
+      <div><div>当前供应量</div><div class="totalSupply val"></div><button>查看</button></div>
+      <div><div>转移owner到</div><input type="text" placeholder="地址" /><button>确定</button></div>
+      <div><div>mint</div><input type="text" placeholder="数量" /><button>确定</button></div>
+    </div>
+
+    <div class="nft holder">
+      --------------------------------------- nft代理 -------------------------------------------<br>
+      <div><div>地址</div><div class="address val"></div></div>
+      <div><div>owner</div><div class="owner val"></div></div>
+      <div><div>当前供应量</div><div class="totalSupply val"></div><button>查看</button></div>
+      <div><div>转移owner到</div><input type="text" placeholder="地址" /><button>确定</button></div>
+      <div><div>mint</div><input type="text" placeholder="数量" /><button>确定</button></div>
+    </div>
+
+    <script src="gm.js"></script>
+  </body>
+</html>
