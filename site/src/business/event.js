@@ -35,10 +35,13 @@ export default [
             wp.find(".li").text(li)
             wp.find(".min").text(min)
             wp.find(".zhi").text(zhi)
-            wp.find(".card-title").text(`#${tokenid}`)
-            wp.find(".card-img-top").attr("src", require(`../assets/img/hero/${heroid}.jpg`))
+            wp.find(".hero-title").text(`#${tokenid}`)
+            wp.find(".hero-img-top").attr("src", require(`../assets/img/hero/${heroid}.jpg`))
 
-            frame.xdebug(`card created, li:${li}, min:${min}, zhi:${zhi}`);
+            let type = heroid - heroid % 100;
+            wp.find(".hero-attr div").eq(type-1).css("color", "#dd0000")
+
+            frame.xdebug(`hero created, li:${li}, min:${min}, zhi:${zhi}`);
         }
     },
     // 卡牌授权给市场或stake

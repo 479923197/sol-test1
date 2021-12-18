@@ -86,10 +86,15 @@ html, body {
 
 
 /****************************************** 卡片 ******************************************/
-.card {
+.hero {
+    position: relative;
+    width: 200px;
+    height: 320px;
+    margin: 5px;
+    border: 1px solid #ddd;
+
     .lv {
-        display: flex;
-        flex-direction: row;
+        padding:0 5px;
         color: #fff;
         height: 1.8rem;
         position: absolute;
@@ -97,11 +102,12 @@ html, body {
         top: 0;
         left: 0;
         line-height: 1.8rem;
+        z-index: 2;
     }
     .hero-attr {
         width: 100%;
         position: absolute;
-        top: 23rem;
+        top: calc(280px - 1.8rem);
         display: flex;
         justify-content: space-between;
         flex-direction: row;
@@ -124,6 +130,13 @@ html, body {
     }
     .zhi {
         background-image: url(../img/attr/zhi.png);
+    }
+    .hero-img-top {
+        width: 200px;
+        height: 280px;
+    }
+    .hero-title {
+        padding-left: 0.5rem;
     }
 }
 
