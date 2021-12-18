@@ -29,10 +29,10 @@ $attr3 = [
 	["min"=>51, "max"=>80, "times"=>2],
 	["min"=>81, "max"=>85, "times"=>1],
 ];
-$types = [
-	["min"=>1, "max"=>1, "times"=>20],
-	["min"=>2, "max"=>2, "times"=>18],
-	["min"=>3, "max"=>3, "times"=>12],
+$ids = [
+	["min"=>101, "max"=>104, "times"=>20], //力量英雄 
+	["min"=>201, "max"=>204, "times"=>40], //敏捷英雄
+	["min"=>301, "max"=>304, "times"=>20], //智力英雄
 ];
 
 function create($arr) {
@@ -58,5 +58,5 @@ echo "attr2\n";
 create($attr2);
 echo "attr3\n";
 create($attr3);
-echo "types\n";
-create($types);
+echo "ids\n";
+create($ids);

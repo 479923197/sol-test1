@@ -17,8 +17,6 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
     uint256 totalRandTimes;
     //生成tokenID计数器
     uint256 private countor;
-    //卡片id,类型
-    mapping(uint256 => uint256) herosType;
     //球员池
     //生成 tokenId => HeroInfo
     mapping(uint256 => HeroInfo) public cardDB;
@@ -43,23 +41,15 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
         
         diamondInstance = _diamondInstance;
         heroPoolInstance = _heroPoolInstance;
-
-        herosType[1] = 1;
-        herosType[2] = 1;
-        herosType[3] = 1;
-        herosType[4] = 1;
-        herosType[5] = 2;
-        herosType[6] = 2;
-        herosType[7] = 2;
-        herosType[8] = 2;
-        herosType[9] = 3;
-        herosType[10] = 3;
-        herosType[11] = 3;
-        herosType[12] = 3;
     }
 
     function setHeroPool( HeroPool _heroPoolInstance) public onlyOwner {
         heroPoolInstance = _heroPoolInstance;
+    }
+
+    function getHeroType(uint256 _hero_id) public view returns (uint256 _type) {
+        _type = _hero_id - (_hero_id % 100);
+        return _type;
     }
 
     /** 抽卡 */
@@ -150,7 +140,8 @@ contract NftHero is ERC721Upgradeable,OwnableUpgradeable,PausableUpgradeable {
     function getAttr(uint256 tokenId) public view returns (uint256 _id, uint256 _type, uint256 li, uint256 min, uint256 zhi, uint lv)  {
         require(cardDB[tokenId].id > 0, "didnot found this token attr");
         HeroInfo memory info = cardDB[tokenId];
-        return (info.id, herosType[_id], info.li, info.min, info.zhi, info.lv);
+        _type = getHeroType(_id);
+        return (info.id, _type, info.li, info.min, info.zhi, info.lv);
     }
 
     function rand(uint256 _min,uint256 _max) private view returns(uint256) {
